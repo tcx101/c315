@@ -33,7 +33,7 @@ const students = [
     name: '郭响雨',
     role: '学生负责人',
     major: '23级软件工程（智能物联）',
-    description: '专注于嵌入式软件与智能控制领域，负责硬件设计与控制算法开发',
+    description: '专注于嵌入式软件与智能控制领域，负责控制算法开发',
     skills: ['嵌入式软件', '智能控制', '电机控制', 'PID算法'],
     github: 'https://github.com',
   },
