@@ -5,7 +5,7 @@ export interface User {
   email: string
   name: string
   avatar?: string
-  role: 'admin' | 'member'
+  role: 'admin' | 'leader' | 'member'
   department?: string
   joinDate: string
   bio?: string

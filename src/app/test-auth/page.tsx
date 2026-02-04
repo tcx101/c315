@@ -191,8 +191,8 @@ export default function TestAuthPage() {
           </h2>
           <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-2">
             <li>1. 填写邮箱、密码和姓名</li>
-            <li>2. 点击"测试注册"查看注册结果</li>
-            <li>3. 点击"测试登录"查看登录结果</li>
+            <li>2. 点击&quot;测试注册&quot;查看注册结果</li>
+            <li>3. 点击&quot;测试登录&quot;查看登录结果</li>
             <li>4. 打开浏览器控制台（F12）查看详细日志</li>
             <li>5. 检查 Supabase Dashboard 的 Authentication 设置</li>
           </ul>
