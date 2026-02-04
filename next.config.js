@@ -3,7 +3,7 @@ const nextConfig = {
   output: 'export',  // 静态导出，适合 Cloudflare Pages
   reactStrictMode: true,
   images: {
-    unoptimized: true,  // 静态导出需要禁用图片优化
+    unoptimized: true,
   },
   // 环境变量
   env: {

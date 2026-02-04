@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { FiMenu, FiX } from 'react-icons/fi'
+import { FiMenu, FiX, FiUser, FiLogOut } from 'react-icons/fi'
+import { useAuth } from '@/contexts/AuthContext'
 
 const navItems = [
   { name: '首页', href: '/' },
@@ -11,12 +13,16 @@ const navItems = [
   { name: '团队成员', href: '/team' },
   { name: '项目展示', href: '/projects' },
   { name: '新闻动态', href: '/news' },
+  { name: '资料库', href: '/resources' },
   { name: '加入我们', href: '/recruitment' },
 ]
 
 export default function Header() {
+  const router = useRouter()
+  const { user, logout } = useAuth()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [showUserMenu, setShowUserMenu] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +31,12 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const handleLogout = () => {
+    logout()
+    setShowUserMenu(false)
+    router.push('/')
+  }
 
   return (
     <motion.header
@@ -60,6 +72,63 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+            
+            {/* 用户菜单 */}
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center gap-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                >
+                  {user.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-8 h-8 rounded-full"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-600 to-accent-600 flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">
+                        {user.name.charAt(0)}
+                      </span>
+                    </div>
+                  )}
+                  <span className="font-medium">{user.name}</span>
+                </button>
+
+                {/* 下拉菜单 */}
+                {showUserMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-50"
+                  >
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      <FiUser size={16} />
+                      个人中心
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <FiLogOut size={16} />
+                      退出登录
+                    </button>
+                  </motion.div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="btn-primary"
+              >
+                登录
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
