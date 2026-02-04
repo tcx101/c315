@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext'
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { login } = useAuth()
+  const { login, register } = useAuth()  // 添加 register
   
   const [isLogin, setIsLogin] = useState(true)
   const [formData, setFormData] = useState({

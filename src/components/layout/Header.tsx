@@ -14,7 +14,7 @@ const navItems = [
   { name: '项目展示', href: '/projects' },
   { name: '新闻动态', href: '/news' },
   { name: '资料库', href: '/resources' },
-  { name: '加入我们', href: '/recruitment' },
+  { name: '申请加入', href: '/apply-member' },
 ]
 
 export default function Header() {
@@ -111,6 +111,16 @@ export default function Header() {
                       <FiUser size={16} />
                       个人中心
                     </Link>
+                    {(user.role === 'admin' || user.role === 'leader') && (
+                      <Link
+                        href="/admin/review-applications"
+                        className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        <FiUser size={16} />
+                        审核申请
+                      </Link>
+                    )}
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-2 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
