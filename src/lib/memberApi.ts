@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import type { MemberApplication, Member } from '@/types/member'
+import { calculateGrade, estimateEnrollmentYear, getAcademicYear } from './gradeUtils'
 
 // 成员申请相关操作
 export const memberApplicationApi = {
@@ -151,5 +152,124 @@ export const memberApi = {
       .eq('id', id)
 
     if (error) throw error
+  },
+
+  // 获取现任学生负责人
+  async getCurrentLeaders() {
+    const { data, error } = await supabase
+      .from('members')
+      .select('*')
+      .eq('role', 'leader')
+      .eq('is_current_leader', true)
+      .order('display_order', { ascending: true })
+
+    if (error) throw error
+    return data || []
+  },
+
+  // 获取历任学生负责人
+  async getFormerLeaders() {
+    const { data, error } = await supabase
+      .from('members')
+      .select('*')
+      .eq('role', 'leader')
+      .eq('is_current_leader', false)
+      .order('leader_end_date', { ascending: false })
+
+    if (error) throw error
+    return data || []
+  },
+
+  // 设置学生负责人
+  async setLeader(memberId: string, termStart: string) {
+    const termYear = getAcademicYear()
+
+    const { data, error } = await supabase
+      .from('members')
+      .update({
+        role: 'leader',
+        is_current_leader: true,
+        leader_start_date: termStart,
+        leader_term: termYear
+      })
+      .eq('id', memberId)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
+  // 卸任学生负责人
+  async removeLeader(memberId: string, termEnd: string) {
+    const { data, error } = await supabase
+      .from('members')
+      .update({
+        role: 'member', // 降级为普通成员
+        is_current_leader: false,
+        leader_end_date: termEnd
+      })
+      .eq('id', memberId)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
+  // 批量更新年级（手动触发）
+  async batchUpdateGrades() {
+    // 获取所有有入学年份的成员
+    const { data: members, error: fetchError } = await supabase
+      .from('members')
+      .select('*')
+      .not('enrollment_year', 'is', null)
+
+    if (fetchError) throw fetchError
+
+    // 计算新年级并更新
+    const updates = members.map(member => {
+      const newGrade = calculateGrade(member.enrollment_year!, member.enrollment_month || 9)
+      const isGrad = newGrade === '已毕业'
+
+      return supabase
+        .from('members')
+        .update({
+          grade: newGrade,
+          is_graduated: isGrad,
+          graduation_year: isGrad ? new Date().getFullYear() : null
+        })
+        .eq('id', member.id)
+    })
+
+    await Promise.all(updates)
+    return { success: true, count: updates.length }
+  },
+
+  // 迁移现有数据（添加入学年份）
+  async migrateExistingData() {
+    const { data: members, error } = await supabase
+      .from('members')
+      .select('*')
+      .is('enrollment_year', null)
+
+    if (error) throw error
+
+    const updates = members.map(member => {
+      if (!member.grade) return null
+
+      const enrollmentYear = estimateEnrollmentYear(member.grade)
+
+      return supabase
+        .from('members')
+        .update({
+          enrollment_year: enrollmentYear,
+          enrollment_month: 9
+        })
+        .eq('id', member.id)
+    }).filter(Boolean)
+
+    await Promise.all(updates)
+    return { success: true, count: updates.length }
   }
 }
