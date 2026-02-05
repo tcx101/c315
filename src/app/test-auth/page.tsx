@@ -73,16 +73,44 @@ export default function TestAuthPage() {
   const checkSession = async () => {
     setResult(null)
     setError(null)
-    
+
     try {
       const { data, error } = await supabase.auth.getSession()
       console.log('会话:', data)
       console.log('错误:', error)
-      
+
       if (error) {
         setError(error)
       } else {
         setResult(data)
+      }
+    } catch (err: any) {
+      setError(err)
+    }
+  }
+
+  const checkSupabaseConfig = () => {
+    const config = {
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      anonKeyLength: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length
+    }
+    console.log('Supabase 配置:', config)
+    setResult(config)
+  }
+
+  const listUsers = async () => {
+    setResult(null)
+    setError(null)
+
+    try {
+      // 尝试获取当前用户
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+      if (userError) {
+        setError({ message: '无法获取用户信息', error: userError })
+      } else {
+        setResult({ currentUser: user })
       }
     } catch (err: any) {
       setError(err)

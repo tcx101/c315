@@ -28,16 +28,9 @@ export default function ContactPage() {
                 <FiMail className="text-primary-600 mt-1" size={20} />
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">邮箱</p>
-                  <a href="mailto:lab@example.com" className="text-gray-600 dark:text-gray-300 hover:text-primary-600">
-                    lab@example.com
+                  <a href="mailto:1902296058@qq.com" className="text-gray-600 dark:text-gray-300 hover:text-primary-600">
+                    1902296058@qq.com
                   </a>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <FiPhone className="text-primary-600 mt-1" size={20} />
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-white">电话</p>
-                  <p className="text-gray-600 dark:text-gray-300">123-4567-8900</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -45,7 +38,7 @@ export default function ContactPage() {
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">地址</p>
                   <p className="text-gray-600 dark:text-gray-300">
-                    某某大学某某楼123室
+                    河南工程学院3号实验楼c区c315
                   </p>
                 </div>
               </div>

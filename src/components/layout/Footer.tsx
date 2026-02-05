@@ -48,15 +48,11 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center space-x-2">
                 <FiMail className="text-primary-400" />
-                <span className="text-sm">lab@example.com</span>
-              </li>
-              <li className="flex items-center space-x-2">
-                <FiPhone className="text-primary-400" />
-                <span className="text-sm">123-4567-8900</span>
+                <span className="text-sm">1902296058@qq.com</span>
               </li>
               <li className="flex items-center space-x-2">
                 <FiMapPin className="text-primary-400" />
-                <span className="text-sm">某某大学某某楼123室</span>
+                <span className="text-sm">河南工程学院3号实验楼c区c315</span>
               </li>
             </ul>
           </div>
