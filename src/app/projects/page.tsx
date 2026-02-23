@@ -160,88 +160,92 @@ export default function ProjectsPage() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProjects.map((project, index) => (
-              <motion.div
+              <Link
                 key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="card hover:scale-105 transition-transform duration-300 cursor-pointer"
+                href={`/projects/${project.id}`}
               >
-                {project.image && (
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                )}
-                
-                <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300 rounded-full text-sm">
-                    {project.year}
-                  </span>
-                  <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(project.status)}`}>
-                    {getStatusText(project.status)}
-                  </span>
-                </div>
-                
-                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-                  {project.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
-                  {project.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-sm"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {project.tags.length > 3 && (
-                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-sm">
-                      +{project.tags.length - 3}
-                    </span>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="card hover:scale-105 transition-transform duration-300 cursor-pointer h-full"
+                >
+                  {project.image && (
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-48 object-cover rounded-lg mb-4"
+                    />
                   )}
-                </div>
-
-                {project.members && project.members.length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      参与成员：{project.members.join('、')}
-                    </p>
+                  
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300 rounded-full text-sm">
+                      {project.year}
+                    </span>
+                    <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(project.status)}`}>
+                      {getStatusText(project.status)}
+                    </span>
                   </div>
-                )}
-                
-                <div className="flex items-center gap-3">
-                  {project.github_url && (
-                    <a
-                      href={project.github_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 text-sm"
-                    >
-                      <FiGithub size={16} />
-                      <span>GitHub</span>
-                    </a>
+                  
+                  <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                    {project.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {project.tags.length > 3 && (
+                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-sm">
+                        +{project.tags.length - 3}
+                      </span>
+                    )}
+                  </div>
+
+                  {project.members && project.members.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        参与成员：{project.members.join('、')}
+                      </p>
+                    </div>
                   )}
-                  {project.demo_url && (
-                    <a
-                      href={project.demo_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 text-sm"
-                    >
-                      <FiExternalLink size={16} />
-                      <span>演示</span>
-                    </a>
-                  )}
-                </div>
-              </motion.div>
+                  
+                  <div className="flex items-center gap-3">
+                    {project.github_url && (
+                      <a
+                        href={project.github_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 text-sm"
+                      >
+                        <FiGithub size={16} />
+                        <span>GitHub</span>
+                      </a>
+                    )}
+                    {project.demo_url && (
+                      <a
+                        href={project.demo_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 text-sm"
+                      >
+                        <FiExternalLink size={16} />
+                        <span>演示</span>
+                      </a>
+                    )}
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </div>
         )}
