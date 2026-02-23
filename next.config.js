@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // 启用静态导出
+  // 移除 output: 'export'，因为我们有动态路由和数据库交互
+  // output: 'export',
   reactStrictMode: true,
   images: {
     unoptimized: true,

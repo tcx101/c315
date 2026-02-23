@@ -1,25 +1,32 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { FiArrowLeft, FiGithub, FiExternalLink, FiCalendar, FiTag, FiUsers } from 'react-icons/fi'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { projectApi } from '@/lib/projectApi'
 import type { Project } from '@/types/project'
 
-export default function ProjectDetailPage({ params }: { params: { id: string } }) {
+export default function ProjectDetailPage() {
   const router = useRouter()
+  const params = useParams()
+  const id = params.id as string
+  
   const [project, setProject] = useState<Project | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchProject()
-  }, [params.id])
+    if (id) {
+      fetchProject()
+    }
+  }, [id])
 
   const fetchProject = async () => {
     try {
-      const data = await projectApi.getById(params.id)
+      const data = await projectApi.getById(id)
       setProject(data)
     } catch (err: any) {
       console.error('Failed to fetch project:', err)
@@ -203,9 +210,29 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                 项目详情
               </h2>
               <div className="prose prose-lg dark:prose-invert max-w-none">
-                <pre className="whitespace-pre-wrap text-gray-700 dark:text-gray-300 leading-relaxed">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-8 mb-4 text-gray-900 dark:text-white" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-2xl font-bold mt-6 mb-3 text-gray-900 dark:text-white" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-xl font-bold mt-4 mb-2 text-gray-900 dark:text-white" {...props} />,
+                    p: ({node, ...props}) => <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300 space-y-2" {...props} />,
+                    ol: ({node, ...props}) => <ol className="list-decimal list-inside mb-4 text-gray-700 dark:text-gray-300 space-y-2" {...props} />,
+                    li: ({node, ...props}) => <li className="ml-4" {...props} />,
+                    code: ({node, inline, ...props}: any) => 
+                      inline ? (
+                        <code className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-primary-600 dark:text-primary-400 rounded text-sm" {...props} />
+                      ) : (
+                        <code className="block p-4 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg overflow-x-auto mb-4" {...props} />
+                      ),
+                    pre: ({node, ...props}) => <pre className="mb-4" {...props} />,
+                    a: ({node, ...props}) => <a className="text-primary-600 dark:text-primary-400 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary-600 pl-4 italic text-gray-600 dark:text-gray-400 my-4" {...props} />,
+                  }}
+                >
                   {project.content}
-                </pre>
+                </ReactMarkdown>
               </div>
             </div>
           )}
