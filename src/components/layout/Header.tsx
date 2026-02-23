@@ -112,14 +112,24 @@ export default function Header() {
                       个人中心
                     </Link>
                     {(user.role === 'admin' || user.role === 'leader') && (
-                      <Link
-                        href="/admin/review-applications"
-                        className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        <FiUser size={16} />
-                        审核申请
-                      </Link>
+                      <>
+                        <Link
+                          href="/admin/review-applications"
+                          className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          <FiUser size={16} />
+                          审核成员申请
+                        </Link>
+                        <Link
+                          href="/admin/review-projects"
+                          className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          <FiUser size={16} />
+                          审核项目
+                        </Link>
+                      </>
                     )}
                     <button
                       onClick={handleLogout}
