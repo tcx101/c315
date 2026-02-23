@@ -40,21 +40,62 @@ export default function ReviewProjectsPage() {
   }
 
   const handleReview = async (project: Project, status: 'approved' | 'rejected') => {
-    if (!user) return
+    console.log('=== handleReview START ===')
+    
+    if (!user) {
+      console.error('No user found')
+      alert('用户未登录')
+      return
+    }
+
+    console.log('User info:', {
+      id: user.id,
+      role: user.role,
+      name: user.name
+    })
+
+    console.log('Project info:', {
+      id: project.id,
+      title: project.title,
+      review_status: project.review_status
+    })
 
     let rejectReason = undefined
     if (status === 'rejected') {
       rejectReason = prompt('请输入拒绝原因：')
-      if (!rejectReason) return
+      if (!rejectReason) {
+        console.log('User cancelled reject reason input')
+        return
+      }
     }
 
+    console.log('Calling projectApi.review with:', {
+      projectId: project.id,
+      status,
+      reviewerId: user.id,
+      rejectReason
+    })
+
     try {
-      await projectApi.review(project.id, status, user.id, rejectReason)
+      const result = await projectApi.review(project.id, status, user.id, rejectReason)
+      console.log('Review success:', result)
       alert(status === 'approved' ? '已通过项目' : '已拒绝项目')
-      fetchProjects()
-    } catch (error) {
-      alert('操作失败，请稍后重试')
+      await fetchProjects()
+    } catch (error: any) {
+      console.error('=== CATCH ERROR ===')
+      console.error('Error type:', typeof error)
+      console.error('Error constructor:', error?.constructor?.name)
+      console.error('Error object:', error)
+      console.error('Error message:', error?.message)
+      console.error('Error stack:', error?.stack)
+      console.error('Error keys:', Object.keys(error || {}))
+      console.error('Error JSON:', JSON.stringify(error, null, 2))
+      
+      const errorMessage = error?.message || error?.toString() || '未知错误'
+      alert(`操作失败：${errorMessage}`)
     }
+    
+    console.log('=== handleReview END ===')
   }
 
   const filteredProjects = projects.filter(project => {

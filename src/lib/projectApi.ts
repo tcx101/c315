@@ -106,20 +106,43 @@ export const projectApi = {
 
   // 审核项目（管理员）
   async review(id: string, status: 'approved' | 'rejected', reviewerId: string, rejectReason?: string) {
-    const { data, error } = await supabase
-      .from('projects')
-      .update({
-        review_status: status,
-        reviewed_by: reviewerId,
-        reviewed_at: new Date().toISOString(),
-        reject_reason: rejectReason || null
-      })
-      .eq('id', id)
-      .select()
-      .single()
+    console.log('projectApi.review called with:', { id, status, reviewerId, rejectReason })
+    
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .update({
+          review_status: status,
+          reviewed_by: reviewerId,
+          reviewed_at: new Date().toISOString(),
+          reject_reason: rejectReason || null
+        })
+        .eq('id', id)
+        .select()
+        .single()
 
-    if (error) throw error
-    return data as Project
+      console.log('Supabase response:', { data, error })
+
+      if (error) {
+        console.error('Supabase error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        throw new Error(error.message || error.hint || error.details || '审核失败，请检查权限')
+      }
+      
+      if (!data) {
+        throw new Error('未找到项目或无权限更新')
+      }
+      
+      console.log('Review successful, returning data')
+      return data as Project
+    } catch (err) {
+      console.error('projectApi.review exception:', err)
+      throw err
+    }
   },
 
   // 按年份筛选
